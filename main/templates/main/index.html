@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/main/index_style.css">
+</head>
+<body>
+    <header>
+      <nav id="header" class="navbar navbar-expand-lg navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+             stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
+             viewBox="0 0 24 24" focusable="false"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5">
+             </circle><path d="M21 21l-5.2-5.2"></path></svg>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+          </ul>
+
+          <form class="form-inline my-2 my-lg-0" action="/search" method="get">
+            {{form_search}}
+            <button id="search" class="btn btn-light my-2 my-sm-0" type="submit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+              stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
+              viewBox="0 0 24 24" focusable="false"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5">
+              </circle><path d="M21 21l-5.2-5.2"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </nav>
+
+      <div class="text-center">
+        <h1>WORKER</h1>
+          <h5 id="logo">Find your way</h5>
+      </div>
+    </header>
+
+<div class="container">
+  <div class="row">
+    <div id="first_main_colon" class="col-md-4">
+      <nav id="sidebar" class="navbar navbar-expand-lg navbar justify-content-start">
+        <button id="sidebar_button" class="navbar-toggler " type="button" data-toggle="collapse"
+          data-target="#navbar-form" aria-controls="navbar-form" aria-expanded="false" aria-label="Toggle navigation">
+          Additions
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbar-form">
+          <form id="form" action="/" method="get">
+            <h4>Requirements</h4>
+              <h5>City</h5>
+                {{form.city}}<hr>
+               <h5>Salary</h5>
+               from <br>
+                 {{form.salary}}
+                 {{form.without_salary}}<hr>
+               <h5>Employment type</h5>
+                 {{form.emp}}<hr>
+               <h5>Programming languages</h5>
+                 {{form.lang}}<hr>
+               <h5>Data bases</h5>
+                 {{form.db}}<hr>
+               <h5>Skills</h5>
+                 {{form.skills}}<hr>
+            <button type="submit" class="btn btn-primary">Send</button>
+          </form>
+        </div>
+      </nav>
+    </div>
+
+    <div id="second_main_colon" class="col-md-8">
+      <h4>Vacancies</h4>
+      <h6>Results for 7 days: {{ results }}</h6>
+      {% for vacancy in page_object.object_list %}
+        <div class="card">
+          <h5 class="title">{{ vacancy.title }}</h5>
+          <h6 class="city">{{ vacancy.city }}</h6>
+          <h6 class="salary">{{ vacancy.salary }}</h6>
+          <p class="description">{{ vacancy.description }}</p>
+        </div>
+      {% endfor%}
+
+  {% if is_paginated %}
+  <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item">
+      {% if prev_url %}
+      <a class="page-link" href="{{ prev_url }}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+  {% endif %}
+
+  {% for page in page_object.paginator.page_range %}
+    {% if page_object.number == page %}
+    <li class="page-item active">
+      <a class="page-link" href="{{ current_url }}page={{ page }}">
+      <span class="sr-only">(current)</span>{{ page }}</a>
+    </li>
+    {% elif page > page_object.number|add:-5 and page < page_object.number|add:5 %}
+    <li class="page-item">
+      <a class="page-link" href="{{ current_url }}page={{ page }}">{{ page }}</a>
+    </li>
+    {% endif %}
+  {% endfor %}
+
+  {% if next_url %}
+    <li>
+      <a class="page-link" href="{{ next_url }}" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  {% endif %}
+  </ul>
+ </nav>
+{% endif %}
+
+    </div>
+  </div>
+</div>
+
+<footer>
+    <div class="container-fluid">
+      <div class="row padding text-center">
+          <div class="col-12">
+             <small class="d-block text-muted">WORKER © 2020-2021</small>
+          </div>
+      </div>
+    </div>
+</footer>
+
+</body>
+</html>

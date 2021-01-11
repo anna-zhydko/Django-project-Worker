@@ -1,0 +1,49 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: bash -c "python /usr/src/workerapp/manage.py migrate --noinput &&
+             python /usr/src/workerapp/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/usr/src/workerapp
+    ports:
+      - 8000:8000
+    depends_on:
+      - mysql
+      - redis
+
+  mysql:
+    image: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Asdfjkl;47813'
+      MYSQL_DATABASE: 'vacancies'
+      MYSQL_USER: 'anna'
+      MYSQL_PASSWORD: 'Asdf4jkl;47813'
+
+  redis:
+    image: redis
+    volumes:
+      - redis_data:/var/lib/redis
+    restart: always
+    ports:
+      - 6379:6379
+
+  celery:
+    build: .
+    command: celery -A WorkerApp worker -B -l INFO
+    volumes:
+      - .:/usr/src/workerapp
+    depends_on:
+      - web
+      - redis
+
+
+volumes:
+  mysql_data:
+  redis_data:
+
