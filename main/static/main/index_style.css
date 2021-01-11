@@ -1,0 +1,149 @@
+body{
+   font-family: Baskerville Old Face, Times New Roman, serif;
+}
+
+ul{
+  list-style-type: none;
+  padding: 0;
+}
+
+#header,
+footer{
+  background:#F8F8FF;
+}
+
+#search{
+  background: white;
+  border: 1px solid #D5DBDB;
+}
+
+#search:hover{
+  background: #F8F8FF;
+}
+
+a:visited{
+  color: #9932CC;
+}
+
+label{
+  margin: 2px;
+}
+
+h1{
+    font-size: 46px;
+    font-weight: bold;
+    margin: 20px 0 0;
+    padding-bottom: 0;
+}
+
+h4{
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+h5{
+    text-align: center;
+}
+
+h5.title{
+    font-size: 25px;
+}
+
+h6{
+    padding: 10px;
+}
+
+h6.city{
+    font-size: 19px;
+    font-weight: bold;
+    padding: 0;
+}
+
+h6.salary{
+    font-size: 18px;
+    padding: 0;
+}
+
+h6.employment{
+    font-style: italic;
+    font-size: 18px;
+    padding: 0;
+}
+
+#logo{
+    font-style: italic;
+    margin-top: 0;
+    padding: 0 0 20px;
+}
+
+#form{
+    border: 1px solid #D5DBDB;
+    margin: 0 0 25px 0;
+    padding: 10px;
+    width: 100%;
+}
+
+#sidebar{
+    margin: 0px;
+    padding: 0px;
+    width: 90%;
+}
+
+#sidebar_button{
+    border: 1px solid #C0C0C0;
+}
+
+div .card{
+  height: 195px;
+  margin: 30px auto;
+  width: 80%;
+  padding: 7px;
+}
+
+p.description{
+   font-style: italic;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+footer{
+    height: 60px;
+}
+
+.col-12{
+    padding: 20px;
+}
+
+option[value="Вінниця"],
+option[value="Дніпро"],
+option[value="Донецьк"],
+option[value="Житомир"],
+option[value="Запоріжжя"],
+option[value="Івано-Франківськ"],
+option[value="Київ"],
+option[value="Кропивницький"],
+option[value="Луганьск"],
+option[value="Луцьк"],
+option[value="Львів"],
+option[value="Миколаїв"],
+option[value="Одеса"],
+option[value="Полтава"],
+option[value="Рівне"],
+option[value="Севастополь"],
+option[value="Суми"],
+option[value="Тернопіль"],
+option[value="Ужгород"],
+option[value="Харків"],
+option[value="Херсон"],
+option[value="Хмельницький"],
+option[value="Черкаси"],
+option[value="Чернівці"],
+option[value="Чернігів"]
+{
+    font-weight: bold;
+}
+
+#id_city,
+#id_salary{
+  width: 100%;
+}
