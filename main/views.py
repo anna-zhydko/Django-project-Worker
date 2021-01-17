@@ -30,7 +30,7 @@ def search(request):
     return render(request, 'main/index.html', context)
 
 
-The f
+# The f
 def index(request):
     form = RequirementsForm(request.GET)
     form_search = SearchForm(request.GET)
