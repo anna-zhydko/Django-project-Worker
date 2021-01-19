@@ -39,29 +39,29 @@ def work_ua_insert():
             for vacancy_info in vacancies_info:
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
-# 
-# 
-# # This task gets the info about a vacancy via rabota.ua API and inserts it to db
-# @app.task
-# def rabota_ua_insert():
-#     if rabota_ua.request_successful():
-#         # Minus 2 for insurance
-#         for page in range(1, rabota_ua.get_page_count() - 2):
-#             vacancies = rabota_ua.get_json(rabota_ua.VACANCIES_API, {'keyWords': 'programmer', 'page': page})
-#             vacancies_id = [vacancy['id'] for vacancy in vacancies['documents']]
-#             for vacancy_info in rabota_ua.get_vacancies_info(vacancies_id):
-#                 if check_db(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']):
-#                     insert_db(vacancy_info)
-# 
-# 
-# # This task gets the info about a vacancy from jooble and inserts it to db
-# @app.task
-# def jooble_insert():
-#     if jooble.request_successful():
-#         for page in range(1, jooble.get_page_count()):
-#             it_vacancies_html = jooble.get_html(jooble.URL, {'page': page})
-#             vacancies_urls = jooble.get_vacancies_urls(it_vacancies_html)
-#             vacancies_info = jooble.get_vacancies_info(vacancies_urls)
-#             for vacancy_info in vacancies_info:
-#                 if check_db(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']):
-#                     insert_db(vacancy_info)
+
+
+# This task gets the info about a vacancy via rabota.ua API and inserts it to db
+@app.task
+def rabota_ua_insert():
+    if rabota_ua.request_successful():
+        # Minus 2 for insurance
+        for page in range(1, rabota_ua.get_page_count() - 2):
+            vacancies = rabota_ua.get_json(rabota_ua.VACANCIES_API, {'keyWords': 'programmer', 'page': page})
+            vacancies_id = [vacancy['id'] for vacancy in vacancies['documents']]
+            for vacancy_info in rabota_ua.get_vacancies_info(vacancies_id):
+                if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
+                    insert_db(vacancy_info)
+
+
+# This task gets the info about a vacancy from jooble and inserts it to db
+@app.task
+def jooble_insert():
+    if jooble.request_successful():
+        for page in range(1, jooble.get_page_count()):
+            it_vacancies_html = jooble.get_html(jooble.URL, {'page': page})
+            vacancies_urls = jooble.get_vacancies_urls(it_vacancies_html)
+            vacancies_info = jooble.get_vacancies_info(vacancies_urls)
+            for vacancy_info in vacancies_info:
+                if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
+                    insert_db(vacancy_info)

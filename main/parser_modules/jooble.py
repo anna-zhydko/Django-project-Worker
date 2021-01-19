@@ -106,13 +106,5 @@ def request_successful():
         return False
 
 
-# # The function checks if the vacancy with the same title, company_name and city already exists in a db - in that case
-# # the vacancy is not adding to the db
-# def check_db(title, company_name, city):
-#     for job in Job.objects.all():
-#         if title in job.title and company_name in job.company_name and city in job.city:
-#             return False
-#         else:
-#             return True
 
 
