@@ -14,22 +14,22 @@ app.conf.timezone = 'Europe/Kiev'
 app.conf.beat_schedule = {
     'work_ua_insert_3_am': {
         'task': 'main.tasks.work_ua_insert',
-        'schedule': crontab(hour=20, minute=36)
+        'schedule': crontab(hour=17, minute=35)
     }
 }
 
-# The task "rabota_ua_insert" will be started at 11:40 every day
-app.conf.beat_schedule = {
-    'work_ua_insert_3_am': {
-        'task': 'main.tasks.rabota_ua_insert',
-        'schedule': crontab(hour=20, minute=36)
-    }
-}
-
-# The task "jooble_insert" will be started at 11:40 every day
-app.conf.beat_schedule = {
-    'work_ua_insert_3_am': {
-        'task': 'main.tasks.jooble_insert',
-        'schedule': crontab(hour=20, minute=36)
-    }
-}
+# # The task "rabota_ua_insert" will be started at 11:40 every day
+# app.conf.beat_schedule = {
+#     'work_ua_insert_3_am': {
+#         'task': 'main.tasks.rabota_ua_insert',
+#         'schedule': crontab(hour=11, minute=46)
+#     }
+# }
+#
+# # The task "jooble_insert" will be started at 11:40 every day
+# app.conf.beat_schedule = {
+#     'work_ua_insert_3_am': {
+#         'task': 'main.tasks.jooble_insert',
+#         'schedule': crontab(hour=11, minute=46)
+#     }
+# }

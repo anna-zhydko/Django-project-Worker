@@ -50,16 +50,16 @@ def get_vacancies_info(vacancies_urls):
     for vacancy_url in vacancies_urls:
         vacancy_html = get_html(vacancy_url)
         soup = BeautifulSoup(vacancy_html, 'html.parser')
-        title = soup.find('h1', id='h1-name').text
+        title = soup.find('h1', id='h1-name')
         employment_type = ' '.join(re.findall(r"\w+ занятость", check_info(vacancy_html, 'Условия и требования'))) + ' '
         remote_work = ' '.join(re.findall(r"[У|у]даленная работа", check_info(vacancy_html, 'Условия и требования')))
         salary = re.findall(r"\d+", check_info(vacancy_html, 'Зарплата'))
-        description = soup.find('div', id='job-description').text
+        description = soup.find('div', id='job-description')
         databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql', description.lower())
         prog_lang_list = re.findall(r'|python|c*/*c\+\+|c#|javasript|java|php|typescript|swift|ruby',
                                     description.lower())
         skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
-        vacancy_info = {'title': title if title else '',
+        vacancy_info = {'title': title.text if title else '',
                         'url': vacancy_url,
                         # translate a city to ukrainian
                         'city': translator(re.findall(r"\w+\b", check_info(vacancy_html, 'Адрес работы'))[0],
@@ -70,7 +70,7 @@ def get_vacancies_info(vacancies_urls):
                         'databases': ' '.join(list(set(databases_list))),  # delete duplicates with set()
                         'prog_lang': ' '.join(list(set(prog_lang_list))),
                         'skills': ' '.join(list(set(skills_list))),
-                        'description': description
+                        'description': description.text if description else ''
                         }
 
         vacancies_info.append(vacancy_info)
