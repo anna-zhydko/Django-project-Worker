@@ -66,10 +66,14 @@ def get_vacancies_info(vacancy_urls):
         # translate a city to ukrainian lang
         city = translator(check_info(vacancy_html, 'div', 'caption _584c5'), 'ru', 'uk')
         description = check_info(vacancy_html, 'div', 'a708d')
-        databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql', description.lower())
-        prog_lang_list = re.findall(r'|python|c*/*c\+\+|c#|javasript|java|php|typescript|swift|ruby',
-                                    description.lower())
-        skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
+        if description:
+            databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql',
+                                        description.lower())
+            prog_lang_list = re.findall(r'|python|c*/*c\+\+|c#|javasript|java|php|typescript|swift|ruby',
+                                        description.lower())
+            skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
+        else:
+            databases_list, prog_lang_list, skills_list = '', '', ''
         vacancy_info = {'title': check_info(vacancy_html, 'h1', '_65c1a h2'),
                         'url': vacancy_url,
                         'city': city,
