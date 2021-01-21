@@ -50,20 +50,25 @@ def get_vacancies_info(vacancies_urls):
     for vacancy_url in vacancies_urls:
         vacancy_html = get_html(vacancy_url)
         soup = BeautifulSoup(vacancy_html, 'html.parser')
-        title = soup.find('h1', id='h1-name').text
+        title = soup.find('h1', id='h1-name')
         employment_type = ' '.join(re.findall(r"\w+ занятость", check_info(vacancy_html, 'Условия и требования'))) + ' '
         remote_work = ' '.join(re.findall(r"[У|у]даленная работа", check_info(vacancy_html, 'Условия и требования')))
         salary = re.findall(r"\d+", check_info(vacancy_html, 'Зарплата'))
-        description = soup.find('div', id='job-description').text
-        databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql', description.lower())
-        prog_lang_list = re.findall(r'|python|c*/*c\+\+|c#|javasript|java|php|typescript|swift|ruby',
-                                    description.lower())
-        skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
-        vacancy_info = {'title': title if title else '',
+        description = soup.find('div', id='job-description')
+        description = description.text if description else ''
+        vacancy_address = re.findall(r"\w+\b", check_info(vacancy_html, 'Адрес работы'))
+        if description:
+            databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql',
+                                        description.lower())
+            prog_lang_list = re.findall(r'|python|c*/*c\+\+|c#|javasript|java|php|typescript|swift|ruby',
+                                        description.lower())
+            skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
+        else:
+            databases_list, prog_lang_list, skills_list = '', '', ''
+        vacancy_info = {'title': title.text if title else '',
                         'url': vacancy_url,
                         # translate a city to ukrainian
-                        'city': translator(re.findall(r"\w+\b", check_info(vacancy_html, 'Адрес работы'))[0],
-                                           'ru', 'uk'),
+                        'city': translator(vacancy_address[0], 'ru', 'uk') if vacancy_address else '',
                         'company_name': check_info(vacancy_html, 'Данные о компании'),
                         'salary': salary[0] if salary else '',
                         'employment': (employment_type + remote_work),
@@ -96,14 +101,7 @@ def request_successful():
         return False
 
 
-# # The function checks if the vacancy with the same title, company_name and city already exists in a db - in that case
-# # the vacancy is not adding to the db
-# def check_db(title, company_name, city):
-#     for job in Job.objects.all():
-#         if title in job.title and company_name in job.company_name and city in job.city:
-#             return False
-#         else:
-#             return True
+
 
 
 

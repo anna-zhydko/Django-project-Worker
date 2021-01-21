@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 import re
 
 
-# The function looks for the entered title in "Job" db and returns ...???????????????????
+# The function is called when user searching for the vacancy in search input
 def search(request):
     form = RequirementsForm(request.GET)
     form_search = SearchForm(request.GET)
@@ -13,6 +13,7 @@ def search(request):
         search_text = form_search.cleaned_data['search'].lower()
     else:
         search_text = ''
+    # the list of vacancies witch have similar title with the search text
     vacancies = [vacancy for vacancy in Job.objects.all() if re.search(search_text, vacancy.title.lower())]
     page, is_paginated, prev_url, next_url, current_url = pagination(request, vacancies)
 
@@ -29,13 +30,15 @@ def search(request):
     return render(request, 'main/index.html', context)
 
 
+# The f
 def index(request):
     form = RequirementsForm(request.GET)
     form_search = SearchForm(request.GET)
     if form.is_valid():
         vacancies = handler_form(form)
+        # if we don`t have corresponding vacancies we show all vacancies
         if not vacancies:
-            vacancies = Job.objects.all()
+            vacancies = Job.objects.all() #??????????????????????????
         page, is_paginated, prev_url, next_url, current_url = pagination(request, vacancies)
         context = {
             'form': form,
@@ -50,6 +53,7 @@ def index(request):
     return render(request, 'main/index.html', context)
 
 
+# The function reading the data from form and returns list of corresponding vacancies
 def handler_form(form):
     city = form.cleaned_data['city'].lower()
     salary = form.cleaned_data['salary']
@@ -79,15 +83,18 @@ def handler_form(form):
 def pagination(request, vacancies):
     # one page containes 6 vacancies
     paginator = Paginator(vacancies, 6)
-    # get the "page" param from url otherwise it returns "1"
+    # get the value of "page" param from url otherwise it returns "1"
     page_num = request.GET.get('page', 1)
     # creating page object
     page = paginator.page(page_num)
-    # getting the url at the moment and delete parameter "page" for updating it
+    # initializing current url
     if request.GET:
+        # getting the url at the moment and delete parameter "page" for updating it
         current_url = re.sub(r'&*page=\d+', '', request.get_full_path()) + '&'
     else:
+        # if there is no GET request - adding "?" for setting the new params in the future
         current_url = request.get_full_path() + '?'
+    # check if page has the other ones
     is_paginated = page.has_other_pages()
     if page.has_previous():
         prev_url = f'{current_url}page={page.previous_page_number()}'

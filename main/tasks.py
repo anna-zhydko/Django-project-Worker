@@ -5,9 +5,9 @@ from .models import Job
 
 # The function checks if the vacancy with the same title, company_name and city already exists in a db - in that case
 # the vacancy is not adding to the db
-def check_db(title, company_name, city):
+def check_existence(title, company_name, city):
     for job in Job.objects.all():
-        if title in job.title and company_name in job.company_name and city in job.city:
+        if title not in job.title and company_name not in job.company_name and city not in job.city:
             return False
         else:
             return True
@@ -37,7 +37,7 @@ def work_ua_insert():
                                                             'card card-hover card-visited wordwrap job-link')
             vacancies_info = work_ua.get_vacancies_info(vacancies_urls)
             for vacancy_info in vacancies_info:
-                if check_db(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']):
+                if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
 
 
@@ -50,7 +50,7 @@ def rabota_ua_insert():
             vacancies = rabota_ua.get_json(rabota_ua.VACANCIES_API, {'keyWords': 'programmer', 'page': page})
             vacancies_id = [vacancy['id'] for vacancy in vacancies['documents']]
             for vacancy_info in rabota_ua.get_vacancies_info(vacancies_id):
-                if check_db(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']):
+                if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
 
 
@@ -63,5 +63,5 @@ def jooble_insert():
             vacancies_urls = jooble.get_vacancies_urls(it_vacancies_html)
             vacancies_info = jooble.get_vacancies_info(vacancies_urls)
             for vacancy_info in vacancies_info:
-                if check_db(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']):
+                if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
