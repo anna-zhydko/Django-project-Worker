@@ -6,7 +6,7 @@ from ..models import Job
 
 
 HOST = 'https://ua.jooble.org'
-URL = 'https://ua.jooble.org/%D1%80%D0%BE%D0%B1%D0%BE%D1%82%D0%B0-programmer?date=3'
+URL = 'https://ua.jooble.org/SearchResult?date=3&ukw=programmers'
 HEADERS = {
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,'
               '*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -24,9 +24,9 @@ def get_html(url, params=''):
 def get_vacancies_urls(html):
     soup = BeautifulSoup(html, 'html.parser')
     vacancies_urls = []
-    vacancies = soup.find_all('div', class_='left-static-block')
+    vacancies = soup.findAll('h2', class_='_1e859')
     for vacancy in vacancies:
-        vacancies_urls.append(vacancy.findChild('a').get('href'))
+        vacancies_urls.append(HOST + vacancy.findChild('a').get('href'))
     return vacancies_urls
 
 
@@ -94,11 +94,14 @@ def get_page_count():
     pagination_html = get_html(URL)  # get html from page that contains maximum numbers of pages
     soup = BeautifulSoup(pagination_html, 'html.parser')
     try:
-        # get count of all vacancies in IT-catigory in jooble at the current moment
-        results_count = int(re.findall(r"\d*", soup.find('p', id='pResultCount').text.replace(' ', ''))[0]) + 1
-        return results_count // 20 - 3 # divide by 20, because one page on jooble.ua containes 20 vacacancies
+        # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
+        # page 1, not null
+        results_count = int(''.join(re.findall(r"\d*", soup.find('div', company='p').text))) + 1
+        if results_count < 20:
+            raise ValueError
+        return results_count // 20  # divide by 20, because one page on jooble.ua containes 20 vacacancies
     except:
-        return 1
+        return 2
 
 
 # The function checks if request is successful
