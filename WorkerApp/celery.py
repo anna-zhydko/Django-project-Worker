@@ -14,7 +14,7 @@ app.conf.timezone = 'Europe/Kiev'
 app.conf.beat_schedule = {
     'work_ua_insert_3_am': {
         'task': 'main.tasks.work_ua_insert',
-        'schedule': crontab(hour=23, minute=30)
+        'schedule': crontab(hour=17, minute=56)
     }
 }
 
@@ -26,10 +26,10 @@ app.conf.beat_schedule = {
 #     }
 # }
 #
-# # The task "jooble_insert" will be started at 11:40 every day
+# The task "jooble_insert" will be started at 11:40 every day
 # app.conf.beat_schedule = {
 #     'work_ua_insert_3_am': {
 #         'task': 'main.tasks.jooble_insert',
-#         'schedule': crontab(hour=11, minute=35)
+#         'schedule': crontab(hour=12, minute=19)
 #     }
 # }

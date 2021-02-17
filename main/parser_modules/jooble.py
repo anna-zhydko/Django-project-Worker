@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from ..google_translator import translator
+from random_user_agent.user_agent import UserAgent
+from random_user_agent.params import SoftwareName, OperatingSystem
 from ..models import Job
 
 
@@ -14,10 +16,21 @@ HEADERS = {
                   'Chrome/84.0.4147.105 Safari/537.36'
 
 }
+software_names = [SoftwareName.CHROME.value]
+operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
+user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
 
 # The function receives html data from page
 def get_html(url, params=''):
-    response = requests.get(url, headers=HEADERS, params=params)
+    while True:
+        try:
+            # Get Random User Agent String
+            HEADERS['user-agent'] = user_agent_rotator.get_random_user_agent()
+            response = requests.get(url, headers=HEADERS, params=params)
+            # print(HEADERS)
+            break
+        except:
+            continue
     return response.text
 
 # The function gets the vacancies urls by parsing via "BeautifulSoup"
