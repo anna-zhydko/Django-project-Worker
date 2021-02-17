@@ -39,6 +39,7 @@ def work_ua_insert():
             for vacancy_info in vacancies_info:
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
+        print('The end')
 
 
 # This task gets the info about a vacancy via rabota.ua API and inserts it to db
