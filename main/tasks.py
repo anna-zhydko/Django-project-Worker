@@ -6,11 +6,12 @@ from .models import Job
 # The function checks if the vacancy with the same title, company_name and city already exists in a db - in that case
 # the vacancy is not adding to the db
 def check_existence(title, company_name, city):
+    if not Job.objects.all():
+        return False
     for job in Job.objects.all():
-        if title not in job.title and company_name not in job.company_name and city not in job.city:
-            return False
-        else:
+        if title == job.title and company_name == job.company_name and city == job.city:
             return True
+    return False
 
 # The function inserts a record to db
 def insert_db(vacancy_info):
@@ -26,6 +27,7 @@ def insert_db(vacancy_info):
 # This task gets the info about a vacancy from work.ua and inserts it to db
 @app.task
 def work_ua_insert():
+    Job.objects.all().delete()
     if work_ua.request_successful():
         for page in range(1, work_ua.get_page_count()):
             it_vacancies_html = work_ua.get_html(work_ua.URL, {'page': page})
