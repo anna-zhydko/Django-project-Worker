@@ -14,7 +14,7 @@ app.conf.timezone = 'Europe/Kiev'
 app.conf.beat_schedule = {
     'work_ua_insert_3_am': {
         'task': 'main.tasks.work_ua_insert',
-        'schedule': crontab(hour=17, minute=56)
+        'schedule': crontab(hour=16, minute=17)
     }
 }
 
