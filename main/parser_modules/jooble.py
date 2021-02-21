@@ -14,24 +14,38 @@ HEADERS = {
               '*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/84.0.4147.105 Safari/537.36'
-
 }
-software_names = [SoftwareName.CHROME.value]
-operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
-user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
+# software_names = [SoftwareName.CHROME.value]
+# operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
+# user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
 
-# The function receives html data from page
-def get_html(url, params=''):
-    while True:
-        try:
-            # Get Random User Agent String
-            HEADERS['user-agent'] = user_agent_rotator.get_random_user_agent()
-            response = requests.get(url, headers=HEADERS, params=params)
-            # print(HEADERS)
-            break
-        except:
-            continue
+# The function makes request from website and gets response
+def get_response(url, params=None, proxies=None, timeout=None):
+    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
+    return response
+
+
+# if limit is exceeded then makes request via proxy
+def check_limit_exceeded(url, params=None):
+    response = get_response(url, params)
+    if response.status_code != 200:
+        proxies_list = get_proxies()
+        for proxies in proxies_list:
+            try:
+                response = get_response(url, params, proxies, 10)
+            except:
+                pass
     return response.text
+
+
+# get proxies list from website
+def get_proxies():
+    proxy_url = 'https://www.ip-adress.com/proxy-list'
+    response = requests.get(proxy_url).text
+    soup = BeautifulSoup(response, 'lxml')
+    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
+    return proxies_list
+
 
 # The function gets the vacancies urls by parsing via "BeautifulSoup"
 def get_vacancies_urls(html):
@@ -69,7 +83,7 @@ def currency_converter(salary):
 def get_vacancies_info(vacancy_urls):
     vacancies_info = []
     for vacancy_url in vacancy_urls:
-        vacancy_html = get_html(vacancy_url)
+        vacancy_html = check_limit_exceeded(vacancy_url)
         salary = check_info(vacancy_html, 'span', 'bb301 h3')
         # translate employment_type and remote_work to russian
         employment_type = translator(check_info(vacancy_html, 'p', '_77a3a d3fee _356ae'), 'uk', 'ru')
@@ -104,7 +118,7 @@ def get_vacancies_info(vacancy_urls):
 
 # The function returns the number of pages in jooble that containes the vacancies in IT-sphere
 def get_page_count():
-    pagination_html = get_html(URL)  # get html from page that contains maximum numbers of pages
+    pagination_html = check_limit_exceeded(URL)  # get html from page that contains maximum numbers of pages
     soup = BeautifulSoup(pagination_html, 'html.parser')
     try:
         # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
