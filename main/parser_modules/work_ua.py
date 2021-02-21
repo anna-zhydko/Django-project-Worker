@@ -15,23 +15,37 @@ HEADERS = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/84.0.4147.105 Safari/537.36'
 }
-software_names = [SoftwareName.CHROME.value]
-operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
-user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
+# software_names = [SoftwareName.CHROME.value]
+# operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
+# user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
 
 
-# The function receives html data from page
-def get_html(url, params=''):
-    while True:
-        try:
-            # Get Random User Agent String
-            HEADERS['user-agent'] = user_agent_rotator.get_random_user_agent()
-            response = requests.get(url, headers=HEADERS, params=params)
-            # print(HEADERS)
-            break
-        except:
-            continue
+# The function makes request from website and gets response
+def get_response(url, params=None, proxies=None, timeout=None):
+    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
+    return response
+
+
+# if limit is exceeded then makes request via proxy
+def check_limit_exceeded(url, params=None):
+    response = get_response(url, params)
+    if response.status_code != 200:
+        proxies_list = get_proxies()
+        for proxies in proxies_list:
+            try:
+                response = get_response(url, params, proxies, 10)
+            except:
+                pass
     return response.text
+
+
+# get proxies list from website
+def get_proxies():
+    proxy_url = 'https://www.ip-adress.com/proxy-list'
+    response = requests.get(proxy_url).text
+    soup = BeautifulSoup(response, 'lxml')
+    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
+    return proxies_list
 
 
 # The function gets the vacancies urls by parsing via "BeautifulSoup"
@@ -60,7 +74,7 @@ def check_info(vacancy_html, title):
 def get_vacancies_info(vacancies_urls):
     vacancies_info = []
     for vacancy_url in vacancies_urls:
-        vacancy_html = get_html(vacancy_url)
+        vacancy_html = check_limit_exceeded(vacancy_url)
         soup = BeautifulSoup(vacancy_html, 'html.parser')
         title = soup.find('h1', id='h1-name')
         employment_type = ' '.join(re.findall(r"\w+ занятость", check_info(vacancy_html, 'Условия и требования'))) + ' '
@@ -96,7 +110,7 @@ def get_vacancies_info(vacancies_urls):
 
 # The function returns the number of pages in work_ua that containes the vacancies in IT-sphere
 def get_page_count():
-    pagination_html = get_html(URL)  # get html from page that contains maximum numbers of pages
+    pagination_html = check_limit_exceeded(URL)  # get html from page that contains maximum numbers of pages
     soup = BeautifulSoup(pagination_html, 'html.parser')
     try:
         return int(soup.find('ul', class_='pagination hidden-xs').find_all('li')[-2].text) + 1
@@ -111,6 +125,7 @@ def request_successful():
         return True
     else:
         return False
+
 
 
 
