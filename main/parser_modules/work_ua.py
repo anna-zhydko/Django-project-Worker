@@ -120,10 +120,10 @@ def get_page_count():
 
 # The function checks if request is successful
 def request_successful():
-    response = requests.get(URL, headers=HEADERS)
-    if response.status_code == 200:
+    try:
+        check_limit_exceeded(URL)
         return True
-    else:
+    except:
         return False
 
 

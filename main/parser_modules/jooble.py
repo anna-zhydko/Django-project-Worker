@@ -25,6 +25,15 @@ def get_response(url, params=None, proxies=None, timeout=None):
     return response
 
 
+# get proxies list from website
+def get_proxies():
+    proxy_url = 'https://www.ip-adress.com/proxy-list'
+    response = requests.get(proxy_url).text
+    soup = BeautifulSoup(response, 'lxml')
+    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
+    return proxies_list
+
+
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
     response = get_response(url, params)
@@ -36,15 +45,6 @@ def check_limit_exceeded(url, params=None):
             except:
                 pass
     return response.text
-
-
-# get proxies list from website
-def get_proxies():
-    proxy_url = 'https://www.ip-adress.com/proxy-list'
-    response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'lxml')
-    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
-    return proxies_list
 
 
 # The function gets the vacancies urls by parsing via "BeautifulSoup"
@@ -133,10 +133,10 @@ def get_page_count():
 
 # The function checks if request is successful
 def request_successful():
-    response = requests.get(URL, headers=HEADERS)
-    if response.status_code == 200:
+    try:
+        check_limit_exceeded(URL)
         return True
-    else:
+    except:
         return False
 
 

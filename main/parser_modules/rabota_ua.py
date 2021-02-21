@@ -8,6 +8,7 @@ from ..models import Job
 HOST = 'https://rabota.ua/'
 VACANCIES_API = 'https://api.rabota.ua/vacancy/search'
 VACANCY_API = 'https://api.rabota.ua/vacancy'
+URL = 'https://rabota.ua/zapros/programmer/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0'
 HEADERS = {
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,'
               'application/signed-exchange;v=b3;q=0.9',
@@ -73,8 +74,7 @@ def get_vacancies_info(vacancies_id):
 
 # The function returns the number of pages in rabota.ua that containes the vacancies in IT-sphere
 def get_page_count():
-    url = 'https://rabota.ua/zapros/programmer/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0'
-    response = requests.get(url, headers=HEADERS).text
+    response = requests.get(URL, headers=HEADERS).text
     soup = BeautifulSoup(response, 'html.parser')
     return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
 
