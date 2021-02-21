@@ -10,26 +10,26 @@ app.autodiscover_tasks()
 app.conf.timezone = 'Europe/Kiev'
 
 
-# The task "work_ua_insert" will be started at 11:40 every day
-app.conf.beat_schedule = {
-    'work_ua_insert_3_am': {
-        'task': 'main.tasks.work_ua_insert',
-        'schedule': crontab(hour=16, minute=17)
-    }
-}
-
-# # The task "rabota_ua_insert" will be started at 11:40 every day
+# # The task "work_ua_insert" will be started at 11:40 every day
 # app.conf.beat_schedule = {
 #     'work_ua_insert_3_am': {
-#         'task': 'main.tasks.rabota_ua_insert',
-#         'schedule': crontab(hour=11, minute=46)
+#         'task': 'main.tasks.work_ua_insert',
+#         'schedule': crontab(hour=17, minute=15)
 #     }
 # }
 #
-# The task "jooble_insert" will be started at 11:40 every day
+# The task "rabota_ua_insert" will be started at 11:40 every day
+app.conf.beat_schedule = {
+    'rabota_ua_insert_3_am': {
+        'task': 'main.tasks.rabota_ua_insert',
+        'schedule': crontab(hour=21, minute=00)
+    }
+}
+
+# # The task "jooble_insert" will be started at 11:40 every day
 # app.conf.beat_schedule = {
-#     'work_ua_insert_3_am': {
+#     'jooble_insert_3_am': {
 #         'task': 'main.tasks.jooble_insert',
-#         'schedule': crontab(hour=12, minute=19)
+#         'schedule': crontab(hour=19, minute=48)
 #     }
 # }

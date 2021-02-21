@@ -42,13 +42,14 @@ def work_ua_insert():
             for vacancy_info in vacancies_info:
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
-        print('The end')
+    print('Work_ua. The end')
 
 
 # This task gets the info about a vacancy via rabota.ua API and inserts it to db
 @app.task
 def rabota_ua_insert():
     if rabota_ua.request_successful():
+        print('successfull')
         # Minus 2 for insurance
         for page in range(1, rabota_ua.get_page_count() - 2):
             vacancies = rabota_ua.check_limit_exceeded(rabota_ua.VACANCIES_API, {'keyWords': 'programmer', 'page': page})
@@ -56,6 +57,7 @@ def rabota_ua_insert():
             for vacancy_info in rabota_ua.get_vacancies_info(vacancies_id):
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
+    print('Rabota_ua. The end')
 
 
 # This task gets the info about a vacancy from jooble and inserts it to db
@@ -69,3 +71,4 @@ def jooble_insert():
             for vacancy_info in vacancies_info:
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
+    print('Jooble_ua. The end')

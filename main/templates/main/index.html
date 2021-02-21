@@ -84,7 +84,7 @@
       <h6>Results for 7 days: {{ results }}</h6>
       {% for vacancy in page_object.object_list %}
         <div class="card">
-          <h5 class="title">{{ vacancy.title }}</h5>
+          <a href="{{ vacancy.url }}"><h5 class="title">{{ vacancy.title }}</h5></a>
           <h6 class="city">{{ vacancy.city }}</h6>
           <h6 class="salary">{{ vacancy.salary }}</h6>
           <p class="description">{{ vacancy.description }}</p>
