@@ -2,22 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from ..google_translator import translator
-from random_user_agent.user_agent import UserAgent
-from random_user_agent.params import SoftwareName, OperatingSystem
 from ..models import Job
 
-
-HOST = 'https://ua.jooble.org'
-URL = 'https://ua.jooble.org/SearchResult?date=3&ukw=programmers'
-HEADERS = {
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,'
-              '*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/84.0.4147.105 Safari/537.36'
-}
-# software_names = [SoftwareName.CHROME.value]
-# operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
-# user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
 
 # The function makes request from website and gets response
 def get_response(url, params=None, proxies=None, timeout=None):
@@ -53,7 +39,7 @@ def get_vacancies_urls(html):
     vacancies_urls = []
     vacancies = soup.findAll('h2', class_='_1e859')
     for vacancy in vacancies:
-        vacancies_urls.append(HOST + vacancy.findChild('a').get('href'))
+        vacancies_urls.append(HOST_JOOBLE + vacancy.findChild('a').get('href'))
     return vacancies_urls
 
 
@@ -118,7 +104,7 @@ def get_vacancies_info(vacancy_urls):
 
 # The function returns the number of pages in jooble that containes the vacancies in IT-sphere
 def get_page_count():
-    pagination_html = check_limit_exceeded(URL)  # get html from page that contains maximum numbers of pages
+    pagination_html = check_limit_exceeded(URL_JOOBLE)  # get html from page that contains maximum numbers of pages
     soup = BeautifulSoup(pagination_html, 'html.parser')
     try:
         # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
@@ -134,7 +120,7 @@ def get_page_count():
 # The function checks if request is successful
 def request_successful():
     try:
-        check_limit_exceeded(URL)
+        check_limit_exceeded(URL_JOOBLE)
         return True
     except:
         return False

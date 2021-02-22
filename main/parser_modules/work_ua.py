@@ -2,22 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from ..google_translator import translator
-from random_user_agent.user_agent import UserAgent
-from random_user_agent.params import SoftwareName, OperatingSystem
 from ..models import Job
-
-
-HOST = 'https://www.work.ua'
-URL = 'https://www.work.ua/ru/jobs-it-programmer/?days=123'
-HEADERS = {
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,'
-              '*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                  'Chrome/84.0.4147.105 Safari/537.36'
-}
-# software_names = [SoftwareName.CHROME.value]
-# operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
-# user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems)
 
 
 # The function makes request from website and gets response
@@ -28,23 +13,30 @@ def get_response(url, params=None, proxies=None, timeout=None):
 
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
-    response = get_response(url, params)
-    if response.status_code != 200:
+    try:
+        response = get_response(url, params)
+        print(response.status_code)
+    except:
+        print('___________proxy_______________')
         proxies_list = get_proxies()
         for proxies in proxies_list:
             try:
                 response = get_response(url, params, proxies, 10)
+                print('_________successfull__________________')
             except:
+                print('____________failed_______________')
                 pass
+        return ''
     return response.text
 
 
 # get proxies list from website
 def get_proxies():
-    proxy_url = 'https://www.ip-adress.com/proxy-list'
-    response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'lxml')
-    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
+    if not proxies_list:
+        proxy_url = 'https://www.ip-adress.com/proxy-list'
+        response = requests.get(proxy_url).text
+        soup = BeautifulSoup(response, 'html.parser')
+        proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
     return proxies_list
 
 
@@ -55,7 +47,7 @@ def get_vacancies_urls(html, tag, class_):
     vacancies = soup.find_all(tag, class_=class_)
     for vacancy in vacancies:
         a = vacancy.findChild('a').get('href')
-        vacancies_urls.append(HOST + a)
+        vacancies_urls.append(HOST_WORKUA + a)
     return vacancies_urls
 
 
@@ -110,7 +102,7 @@ def get_vacancies_info(vacancies_urls):
 
 # The function returns the number of pages in work_ua that containes the vacancies in IT-sphere
 def get_page_count():
-    pagination_html = check_limit_exceeded(URL)  # get html from page that contains maximum numbers of pages
+    pagination_html = check_limit_exceeded(URL_WORKUA)  # get html from page that contains maximum numbers of pages
     soup = BeautifulSoup(pagination_html, 'html.parser')
     try:
         return int(soup.find('ul', class_='pagination hidden-xs').find_all('li')[-2].text) + 1
@@ -121,7 +113,7 @@ def get_page_count():
 # The function checks if request is successful
 def request_successful():
     try:
-        check_limit_exceeded(URL)
+        check_limit_exceeded(URL_WORKUA)
         return True
     except:
         return False

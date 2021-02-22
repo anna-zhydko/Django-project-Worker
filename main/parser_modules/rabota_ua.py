@@ -3,17 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from ..google_translator import translator
 from ..models import Job
-
-
-HOST = 'https://rabota.ua/'
-VACANCIES_API = 'https://api.rabota.ua/vacancy/search'
-VACANCY_API = 'https://api.rabota.ua/vacancy'
-URL = 'https://rabota.ua/zapros/programmer/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0'
-HEADERS = {
-    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,'
-              'application/signed-exchange;v=b3;q=0.9',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-                  '(KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'}
+from config import *
 
 
 # The function makes request from website and gets response
@@ -74,7 +64,7 @@ def get_vacancies_info(vacancies_id):
 
 # The function returns the number of pages in rabota.ua that containes the vacancies in IT-sphere
 def get_page_count():
-    response = requests.get(URL, headers=HEADERS).text
+    response = requests.get(URL_RABOTAUA, headers=HEADERS).text
     soup = BeautifulSoup(response, 'html.parser')
     return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
 
@@ -85,7 +75,7 @@ def request_successful():
         vacancies = check_limit_exceeded(VACANCIES_API)
         vacancy_id = vacancies['documents'][0]['id']
         check_limit_exceeded(VACANCY_API, {'id': vacancy_id})
-        if requests.get(URL, headers=HEADERS).status_code == 200:
+        if requests.get(URL_RABOTAUA, headers=HEADERS).status_code == 200:
             return True
         else:
             return False
