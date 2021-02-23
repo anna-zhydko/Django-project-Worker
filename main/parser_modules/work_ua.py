@@ -3,6 +3,18 @@ from bs4 import BeautifulSoup
 import re
 from ..google_translator import translator
 from ..models import Job
+from .config import *
+
+
+proxy_list = []
+
+
+# get proxies list from website
+def get_proxies():
+    proxy_url = 'https://www.ip-adress.com/proxy-list'
+    response = requests.get(proxy_url).text
+    soup = BeautifulSoup(response, 'html.parser')
+    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
 
 
 # The function makes request from website and gets response
@@ -16,28 +28,22 @@ def check_limit_exceeded(url, params=None):
     try:
         response = get_response(url, params)
         print(response.status_code)
+        return response.text
     except:
         print('___________proxy_______________')
-        proxies_list = get_proxies()
-        for proxies in proxies_list:
+        global proxy_list
+        if not proxy_list:
+            proxy_list = get_proxies()
+        print(proxy_list)
+        for proxies in proxy_list:
             try:
-                response = get_response(url, params, proxies, 10)
                 print('_________successfull__________________')
+                response = get_response(url, params, proxies, 10)
+                return response.text
             except:
                 print('____________failed_______________')
                 pass
-        return ''
-    return response.text
-
-
-# get proxies list from website
-def get_proxies():
-    if not proxies_list:
-        proxy_url = 'https://www.ip-adress.com/proxy-list'
-        response = requests.get(proxy_url).text
-        soup = BeautifulSoup(response, 'html.parser')
-        proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
-    return proxies_list
+    return ''
 
 
 # The function gets the vacancies urls by parsing via "BeautifulSoup"

@@ -2,6 +2,8 @@ from WorkerApp.celery import app
 from .parser_modules import work_ua, rabota_ua, jooble
 from .models import Job
 from .parser_modules.config import *
+import requests
+from bs4 import BeautifulSoup
 
 
 # The function checks if the vacancy with the same title, company_name and city already exists in a db - in that case
@@ -28,18 +30,16 @@ def insert_db(vacancy_info):
 
 # get proxies list from website
 def get_proxies():
-    if not PROXY_LIST:
-        proxy_url = 'https://www.ip-adress.com/proxy-list'
-        response = requests.get(proxy_url).text
-        soup = BeautifulSoup(response, 'html.parser')
-        PROXY_LIST = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
-    return proxy_list
+    proxy_url = 'https://www.ip-adress.com/proxy-list'
+    response = requests.get(proxy_url).text
+    soup = BeautifulSoup(response, 'html.parser')
+    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
+
 
 # This task gets the info about a vacancy from work.ua and inserts it to db
 @app.task
 def work_ua_insert():
     Job.objects.all().delete()
-    PROXY_LIST = get_proxies(PROXY_LIST)
     if work_ua.request_successful():
         for page in range(1, work_ua.get_page_count()):
             it_vacancies_html = work_ua.check_limit_exceeded(URL_WORKUA, {'page': page})

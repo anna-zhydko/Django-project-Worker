@@ -9,12 +9,19 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 app.conf.timezone = 'Europe/Kiev'
 
+# # The task "get_proxies" gets proxies
+# app.conf.beat_schedule = {
+#     'get_proxies': {
+#         'task': 'main.tasks.get_proxies',
+#         'schedule': crontab(hour=11, minute=18)
+#     }
+# }
 
 # The task "work_ua_insert" will be started at 11:40 every day
 app.conf.beat_schedule = {
     'work_ua_insert_3_am': {
         'task': 'main.tasks.work_ua_insert',
-        'schedule': crontab(hour=18, minute=3)
+        'schedule': crontab(hour=20, minute=54)
     }
 }
 
