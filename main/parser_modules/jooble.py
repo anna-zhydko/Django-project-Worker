@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import re
 from ..google_translator import translator
 from ..models import Job
+from .config import *
 
 
 # The function makes request from website and gets response
