@@ -1,65 +1,27 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from ..google_translator import translator
+from ..utils import get_response, get_proxies, translator
+from ..config import *
 from ..models import Job
-from .config import *
-
-
-# The function makes request from website and gets response
-def get_response(url, params=None, proxies=None, timeout=None):
-    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
-    return response
-
-
-# get proxies list from website
-def get_proxies():
-    proxy_url = 'https://www.ip-adress.com/proxy-list'
-    response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'html.parser')
-    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
 
 
 proxy_list = []
 # if limit is exceeded then makes request via proxy
-# def check_limit_exceeded(url, params=None):
-#     global proxy_list
-#     response = get_response(url, params)
-#     print(response.status_code)
-#     if response.status_code != 200:
-#         print(____proxy_____, len(proxy))
-#         if not proxy_list:
-#             proxy_list = get_proxies()
-#         for proxy in proxy_list:
-#             try:
-#                 response = get_response(url, params, proxy, 10)
-#                 print('___________proxy successfull_____________')
-#             except:
-#                 pass
-#                 print('___________proxy failed_____________')
-#     return response.json()
-
-
 def check_limit_exceeded(url, params=None):
     try:
         response = get_response(url, params)
-        print(response.status_code)
         return response.json()
     except:
-        print('___________proxy_______________')
         global proxy_list
         if not proxy_list:
             proxy_list = get_proxies()
-        # print(proxy_list)
         for proxy in proxy_list:
             try:
                 response = get_response(url, params, proxy, 10)
-                print('_________successfull__________________')
                 return response.json()
             except:
-                print('____________failed_______________')
                 pass
-    print('nothing')
     return ''
 
 
@@ -97,11 +59,11 @@ def get_vacancies_info(vacancies_id):
 
 # The function returns the number of pages in rabota.ua that containes the vacancies in IT-sphere
 def get_page_count():
-    try:
-        response = requests.get(URL_RABOTAUA, headers=HEADERS).text
-        soup = BeautifulSoup(response, 'html.parser')
-        return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
-    except:
+    # try:
+    #     response = requests.get(URL_RABOTAUA, headers=HEADERS).text
+    #     soup = BeautifulSoup(response, 'html.parser')
+    #     return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
+    # except:
         return 2
 
 

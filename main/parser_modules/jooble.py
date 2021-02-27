@@ -1,50 +1,28 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from ..google_translator import translator
+from ..utils import get_response, get_proxies, translator
+from ..config import *
 from ..models import Job
-from .config import *
-
-
-# The function makes request from website and gets response
-def get_response(url, params=None, proxies=None, timeout=None):
-    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
-    return response
-
-
-# get proxies list from website
-def get_proxies():
-    proxy_url = 'https://www.ip-adress.com/proxy-list'
-    response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'html.parser')
-    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
 
 
 proxy_list = []
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
-    response = None
-    count = 0
     try:
         response = get_response(url, params)
-        print(response.status_code)
+        return response.text
     except:
-        print('___________proxy_______________')
         global proxy_list
         if not proxy_list:
             proxy_list = get_proxies()
-        print(proxy_list)
-        for proxies in proxy_list:
-            count += 1
-            print(count)
+        for proxy in proxy_list:
             try:
-                response = get_response(url, params, proxies, 10)
-                print('_________successfull__________________')
-                break
+                response = get_response(url, params, proxy, 10)
+                return response.text
             except:
-                print('____________failed_______________')
-        if not response: return ''
-    return response.text
+                pass
+    return ''
 
 
 # The function gets the vacancies urls by parsing via "BeautifulSoup"
@@ -127,16 +105,16 @@ def get_vacancies_info(vacancy_urls):
 
 # The function returns the number of pages in jooble that containes the vacancies in IT-sphere
 def get_page_count():
-    pagination_html = check_limit_exceeded(URL_JOOBLE)  # get html from page that contains maximum numbers of pages
-    soup = BeautifulSoup(pagination_html, 'html.parser')
-    try:
-        # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
-        # page 1, not null
-        results_count = int(''.join(re.findall(r"\d*", soup.find('div', company='p').text))) + 1
-        if results_count < 20:
-            raise ValueError
-        return results_count // 20  # divide by 20, because one page on jooble.ua containes 20 vacacancies
-    except:
+    # pagination_html = check_limit_exceeded(URL_JOOBLE)  # get html from page that contains maximum numbers of pages
+    # soup = BeautifulSoup(pagination_html, 'html.parser')
+    # try:
+    #     # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
+    #     # page 1, not null
+    #     results_count = int(''.join(re.findall(r"\d*", soup.find('div', company='p').text))) + 1
+    #     if results_count < 20:
+    #         raise ValueError
+    #     return results_count // 20  # divide by 20, because one page on jooble.ua containes 20 vacacancies
+    # except:
         return 2
 
 

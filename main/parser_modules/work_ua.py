@@ -1,47 +1,30 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from ..google_translator import translator
+from ..utils import get_response, get_proxies, translator
+from ..config import *
 from ..models import Job
-from .config import *
-
-
-# The function makes request from website and gets response
-def get_response(url, params=None, proxies=None, timeout=None):
-    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
-    return response
-
-
-# get proxies list from website
-def get_proxies():
-    proxy_url = 'https://www.ip-adress.com/proxy-list'
-    response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'html.parser')
-    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
 
 
 proxy_list = []
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
+    response = get_response(url, params)
+    print(response.status_code)
     try:
         response = get_response(url, params)
-        print(response.status_code)
         return response.text
     except:
-        print('___________proxy_______________')
         global proxy_list
         if not proxy_list:
             proxy_list = get_proxies()
-        print(proxy_list)
+            print(proxy_list)
         for proxies in proxy_list:
             try:
                 response = get_response(url, params, proxies, 10)
-                print('_________successfull__________________')
                 return response.text
             except:
-                print('____________failed_______________')
                 pass
-        print('nothing')
     return ''
 
 
@@ -109,11 +92,11 @@ def get_vacancies_info(vacancies_urls):
 
 # The function returns the number of pages in work_ua that containes the vacancies in IT-sphere
 def get_page_count():
-    pagination_html = check_limit_exceeded(URL_WORKUA)  # get html from page that contains maximum numbers of pages
-    soup = BeautifulSoup(pagination_html, 'html.parser')
-    try:
-        return int(soup.find('ul', class_='pagination hidden-xs').find_all('li')[-2].text) + 1
-    except:
+    # pagination_html = check_limit_exceeded(URL_WORKUA)  # get html from page that contains maximum numbers of pages
+    # soup = BeautifulSoup(pagination_html, 'html.parser')
+    # try:
+    #     return int(soup.find('ul', class_='pagination hidden-xs').find_all('li')[-2].text) + 1
+    # except:
         return 2
 
 
@@ -123,6 +106,7 @@ def request_successful():
         check_limit_exceeded(URL_WORKUA)
         return True
     except:
+        print('no')
         return False
 
 
