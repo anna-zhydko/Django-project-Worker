@@ -16,21 +16,34 @@ def get_response(url, params=None, proxies=None, timeout=None):
 def get_proxies():
     proxy_url = 'https://www.ip-adress.com/proxy-list'
     response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'lxml')
-    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
-    return proxies_list
+    soup = BeautifulSoup(response, 'html.parser')
+    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
 
 
+proxy_list = []
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
-    response = get_response(url, params)
-    if response.status_code != 200:
-        proxies_list = get_proxies()
-        for proxies in proxies_list:
+    response = None
+    count = 0
+    try:
+        response = get_response(url, params)
+        print(response.status_code)
+    except:
+        print('___________proxy_______________')
+        global proxy_list
+        if not proxy_list:
+            proxy_list = get_proxies()
+        print(proxy_list)
+        for proxies in proxy_list:
+            count += 1
+            print(count)
             try:
                 response = get_response(url, params, proxies, 10)
+                print('_________successfull__________________')
+                break
             except:
-                pass
+                print('____________failed_______________')
+        if not response: return ''
     return response.text
 
 
@@ -53,17 +66,24 @@ def check_info(vacancy_html, tag, class_):
         return ''
 
 
+dollar, euro = 0, 0
 # The function converts a salary from dollars or euros into uah by using privatbank api
 def currency_converter(salary):
-    response = requests.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5', headers=HEADERS)
-    salary = salary.replace(' ', '')
-    if salary[-1] == '$':
-        rate = int(float(response.json()[0]['sale']) * int(re.findall(r"\d+", salary)[0]))
-    elif salary[-1] == '€':
-        rate = int(float(response.json()[0]['sale']) * int(re.findall(r"\d+", salary)[0]))
-    else:  # means 'uah'
-        rate = int(re.findall(r"\d+", salary)[0])
-    return str(rate)
+    global dollar, euro
+    try:
+        if dollar == 0 and euro == 0:
+            response = requests.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5', headers=HEADERS)
+            dollar, euro = float(response.json()[0]['sale']), float(response.json()[1]['sale'])
+        salary = salary.replace(' ', '')
+        if salary[-1] == '$':
+            rate = int(dollar * int(re.findall(r"\d+", salary)[0]))
+        elif salary[-1] == '€':
+            rate = int(euro * int(re.findall(r"\d+", salary)[0]))
+        else:  # means 'uah'
+            rate = int(re.findall(r"\d+", salary)[0])
+        return str(rate)
+    except:
+        return salary
 
 
 # Collect the information the vacancies
@@ -71,6 +91,8 @@ def get_vacancies_info(vacancy_urls):
     vacancies_info = []
     for vacancy_url in vacancy_urls:
         vacancy_html = check_limit_exceeded(vacancy_url)
+        if vacancy_html == '':
+            break
         salary = check_info(vacancy_html, 'span', 'bb301 h3')
         # translate employment_type and remote_work to russian
         employment_type = translator(check_info(vacancy_html, 'p', '_77a3a d3fee _356ae'), 'uk', 'ru')

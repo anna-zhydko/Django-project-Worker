@@ -6,7 +6,10 @@ from ..models import Job
 from .config import *
 
 
-proxy_list = []
+# The function makes request from website and gets response
+def get_response(url, params=None, proxies=None, timeout=None):
+    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
+    return response
 
 
 # get proxies list from website
@@ -17,12 +20,7 @@ def get_proxies():
     return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
 
 
-# The function makes request from website and gets response
-def get_response(url, params=None, proxies=None, timeout=None):
-    response = requests.get(url, headers=HEADERS, params=params, proxies=proxies, timeout=timeout)
-    return response
-
-
+proxy_list = []
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
     try:
@@ -37,12 +35,13 @@ def check_limit_exceeded(url, params=None):
         print(proxy_list)
         for proxies in proxy_list:
             try:
-                print('_________successfull__________________')
                 response = get_response(url, params, proxies, 10)
+                print('_________successfull__________________')
                 return response.text
             except:
                 print('____________failed_______________')
                 pass
+        print('nothing')
     return ''
 
 
@@ -73,6 +72,8 @@ def get_vacancies_info(vacancies_urls):
     vacancies_info = []
     for vacancy_url in vacancies_urls:
         vacancy_html = check_limit_exceeded(vacancy_url)
+        if vacancy_html == '':
+            break
         soup = BeautifulSoup(vacancy_html, 'html.parser')
         title = soup.find('h1', id='h1-name')
         employment_type = ' '.join(re.findall(r"\w+ занятость", check_info(vacancy_html, 'Условия и требования'))) + ' '
