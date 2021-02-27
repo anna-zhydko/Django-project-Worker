@@ -12,26 +12,56 @@ def get_response(url, params=None, proxies=None, timeout=None):
     return response
 
 
-# if limit is exceeded then makes request via proxy
-def check_limit_exceeded(url, params=None):
-    response = get_response(url, params)
-    if response.status_code != 200:
-        proxies_list = get_proxies()
-        for proxies in proxies_list:
-            try:
-                response = get_response(url, params, proxies, 10)
-            except:
-                pass
-    return response.json()
-
-
 # get proxies list from website
 def get_proxies():
     proxy_url = 'https://www.ip-adress.com/proxy-list'
     response = requests.get(proxy_url).text
-    soup = BeautifulSoup(response, 'lxml')
-    proxies_list = [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
-    return proxies_list
+    soup = BeautifulSoup(response, 'html.parser')
+    return [row.text.split('\n')[1] for row in soup.find('tbody').findAll('tr')]
+
+
+proxy_list = []
+# if limit is exceeded then makes request via proxy
+# def check_limit_exceeded(url, params=None):
+#     global proxy_list
+#     response = get_response(url, params)
+#     print(response.status_code)
+#     if response.status_code != 200:
+#         print(____proxy_____, len(proxy))
+#         if not proxy_list:
+#             proxy_list = get_proxies()
+#         for proxy in proxy_list:
+#             try:
+#                 response = get_response(url, params, proxy, 10)
+#                 print('___________proxy successfull_____________')
+#             except:
+#                 pass
+#                 print('___________proxy failed_____________')
+#     return response.json()
+
+
+def check_limit_exceeded(url, params=None):
+    try:
+        response = get_response(url, params)
+        print(response.status_code)
+        return response.json()
+    except:
+        print('___________proxy_______________')
+        global proxy_list
+        if not proxy_list:
+            proxy_list = get_proxies()
+        # print(proxy_list)
+        for proxy in proxy_list:
+            try:
+                response = get_response(url, params, proxy, 10)
+                print('_________successfull__________________')
+                return response.json()
+            except:
+                print('____________failed_______________')
+                pass
+    print('nothing')
+    return ''
+
 
 
 # Collect the information the vacancies
@@ -39,6 +69,9 @@ def get_vacancies_info(vacancies_id):
     vacancies_info = []
     for vacancy_id in vacancies_id:
         vacancy_json = check_limit_exceeded(VACANCY_API, {'id': vacancy_id})
+        if vacancy_json == '':
+            break
+        # print(vacancy_json)
         employment = [cluster['groups'][0]['name'] if cluster['id'] == 52 else '' for cluster in vacancy_json['clusters']]
         description = BeautifulSoup(vacancy_json['description'], 'html.parser').text
         databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql', description.lower())
@@ -64,9 +97,12 @@ def get_vacancies_info(vacancies_id):
 
 # The function returns the number of pages in rabota.ua that containes the vacancies in IT-sphere
 def get_page_count():
-    response = requests.get(URL_RABOTAUA, headers=HEADERS).text
-    soup = BeautifulSoup(response, 'html.parser')
-    return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
+    try:
+        response = requests.get(URL_RABOTAUA, headers=HEADERS).text
+        soup = BeautifulSoup(response, 'html.parser')
+        return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
+    except:
+        return 2
 
 
 # The function checks if request is successful
