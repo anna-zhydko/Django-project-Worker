@@ -5,10 +5,12 @@ from .config import *
 import requests
 from bs4 import BeautifulSoup
 from .utils import check_existence, insert_db
+from celery import group
 
 
 @app.task
 def clear_db():
+    print('clear')
     Job.objects.all().delete()
 
 # This task gets the info about a vacancy from work.ua and inserts it to db
@@ -68,3 +70,9 @@ def jooble_insert():
                     insert_db(vacancy_info)
                     print(vacancy_info['title'], vacancy_info['url'])
     print('Jooble_ua. The end')
+
+
+@app.task
+def task_group():
+    print('task group')
+    return group([clear_db.s(), work_ua_insert.s(), rabota_ua_insert.s(), jooble_insert.s()])

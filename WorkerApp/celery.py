@@ -9,13 +9,14 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 app.conf.timezone = 'Europe/Kiev'
 
-# # The task "work_ua_insert" will be started at 11:40 every day
-# app.conf.beat_schedule = {
-#     'clear_db': {
-#         'task': 'main.tasks.clear_db',
-#         'schedule': crontab(hour=16, minute=34)
-#     }
-# }
+
+# The task "work_ua_insert" will be started at 11:40 every day
+app.conf.beat_schedule = {
+    'clear_db': {
+        'task': 'main.tasks.task_group',
+        'schedule': crontab(hour=18, minute=18)
+    }
+}
 #
 # # The task "work_ua_insert" will be started at 11:40 every day
 # app.conf.beat_schedule = {
