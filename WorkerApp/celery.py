@@ -10,22 +10,22 @@ app.autodiscover_tasks()
 app.conf.timezone = 'Europe/Kiev'
 
 
-# The task "work_ua_insert" will be started at 11:40 every day
-app.conf.beat_schedule = {
-    'clear_db': {
-        'task': 'main.tasks.task_group',
-        'schedule': crontab(hour=18, minute=18)
-    }
-}
-#
 # # The task "work_ua_insert" will be started at 11:40 every day
 # app.conf.beat_schedule = {
-#     'work_ua_insert_3_am': {
-#         'task': 'main.tasks.work_ua_insert',
-#         'schedule': crontab(hour=16, minute=41)
+#     'clear_db': {
+#         'task': 'main.tasks.all_tasks',
+#         'schedule': crontab(hour=14, minute=31)
 #     }
 # }
 #
+# The task "work_ua_insert" will be started at 11:40 every day
+app.conf.beat_schedule = {
+    'work_ua_insert_3_am': {
+        'task': 'main.tasks.rabota_ua_insert',
+        'schedule': crontab(hour=14, minute=48)
+    }
+}
+
 # # The task "rabota_ua_insert" will be started at 11:40 every day
 # app.conf.beat_schedule = {
 #     'rabota_ua_insert_3_am': {

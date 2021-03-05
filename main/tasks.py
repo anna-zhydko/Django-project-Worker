@@ -8,15 +8,16 @@ from .utils import check_existence, insert_db
 from celery import group
 
 
-@app.task
-def clear_db():
-    print('clear')
-    Job.objects.all().delete()
+# @app.task
+# def clear_db():
+#     print('clear')
+#     Job.objects.all().delete()
 
 # This task gets the info about a vacancy from work.ua and inserts it to db
 @app.task
 def work_ua_insert():
     print('work ua')
+    Job.objects.all().delete()
     if work_ua.request_successful():
         for page in range(1, work_ua.get_page_count()):
             it_vacancies_html = work_ua.check_limit_exceeded(URL_WORKUA, {'page': page})
@@ -41,6 +42,7 @@ def work_ua_insert():
 def rabota_ua_insert():
     if rabota_ua.request_successful():
         print('rabota ua')
+        Job.objects.all().delete()
         # Minus 2 for insurance
         for page in range(1, rabota_ua.get_page_count() - 2):
             vacancies = rabota_ua.check_limit_exceeded(VACANCIES_API, {'keyWords': 'programmer', 'page': page})
@@ -58,6 +60,7 @@ def rabota_ua_insert():
 @app.task
 def jooble_insert():
     print('jooble')
+    Job.objects.all().delete()
     if jooble.request_successful():
         for page in range(1, jooble.get_page_count()):
             it_vacancies_html = jooble.check_limit_exceeded(URL_JOOBLE, {'page': page})
@@ -73,6 +76,8 @@ def jooble_insert():
 
 
 @app.task
-def task_group():
+def all_tasks():
     print('task group')
-    return group([clear_db.s(), work_ua_insert.s(), rabota_ua_insert.s(), jooble_insert.s()])
+    Job.objects.all().delete()
+    task_group = group([work_ua_insert.s(), rabota_ua_insert.s(), jooble_insert.s()])
+    task_group()
