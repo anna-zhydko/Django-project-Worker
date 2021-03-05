@@ -44,7 +44,7 @@ def rabota_ua_insert():
         print('rabota ua')
         Job.objects.all().delete()
         # Minus 2 for insurance
-        for page in range(1, rabota_ua.get_page_count() - 2):
+        for page in range(1, rabota_ua.get_page_count()):
             vacancies = rabota_ua.check_limit_exceeded(VACANCIES_API, {'keyWords': 'programmer', 'page': page})
             if vacancies == '':
                 break
@@ -67,8 +67,11 @@ def jooble_insert():
             if it_vacancies_html == '':
                 break
             vacancies_urls = jooble.get_vacancies_urls(it_vacancies_html)
+            print('vacancies_urls', vacancies_urls)
             vacancies_info = jooble.get_vacancies_info(vacancies_urls)
+            print(vacancies_info)
             for vacancy_info in vacancies_info:
+                print('iter vacancy')
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
                     print(vacancy_info['title'], vacancy_info['url'])

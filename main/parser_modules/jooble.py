@@ -22,6 +22,7 @@ def check_limit_exceeded(url, params=None):
                 return response.text
             except:
                 pass
+    print('nothing')
     return ''
 
 
@@ -29,7 +30,7 @@ def check_limit_exceeded(url, params=None):
 def get_vacancies_urls(html):
     soup = BeautifulSoup(html, 'html.parser')
     vacancies_urls = []
-    vacancies = soup.findAll('h2', class_='_1e859')
+    vacancies = soup.findAll('h2', class_='_085f3')
     for vacancy in vacancies:
         vacancies_urls.append(HOST_JOOBLE + vacancy.findChild('a').get('href'))
     return vacancies_urls
@@ -122,6 +123,7 @@ def get_page_count():
 def request_successful():
     try:
         check_limit_exceeded(URL_JOOBLE)
+        print('successfull')
         return True
     except:
         return False
