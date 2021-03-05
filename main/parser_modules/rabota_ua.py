@@ -22,7 +22,6 @@ def check_limit_exceeded(url, params=None):
                 return response.json()
             except:
                 pass
-    print('nothing')
     return ''
 
 
@@ -65,7 +64,7 @@ def get_page_count():
     #     soup = BeautifulSoup(response, 'html.parser')
     #     return int(soup.find('span', class_='f-text-gray f-pagination-ellipsis -right').findParent().a.text)
     # except:
-    return 3
+    return 2
 
 
 # The function checks if request is successful
