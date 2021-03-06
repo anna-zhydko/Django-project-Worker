@@ -106,7 +106,6 @@ def request_successful():
         check_limit_exceeded(URL_WORKUA)
         return True
     except:
-        print('no')
         return False
 
 
