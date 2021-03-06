@@ -1,5 +1,6 @@
 body{
    font-family: Baskerville Old Face, Times New Roman, serif;
+   background: #F8F8FF;
 }
 
 ul{
@@ -9,7 +10,7 @@ ul{
 
 #header,
 footer{
-  background:#F8F8FF;
+  background: #F5EFFB;
 }
 
 #search{
@@ -101,9 +102,9 @@ h6.employment{
 }
 
 div .card{
-  height: 195px;
+  height: 258px;
   margin: 30px auto;
-  width: 80%;
+  width: 89%;
   padding: 7px;
 }
 
@@ -154,4 +155,9 @@ option[value="Чернігів"]
 #id_city,
 #id_salary{
   width: 100%;
+}
+
+.row{
+    margin-right: -15px;
+    margin-left: -15px;
 }

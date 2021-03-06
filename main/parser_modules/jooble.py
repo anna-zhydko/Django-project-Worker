@@ -22,7 +22,6 @@ def check_limit_exceeded(url, params=None):
                 return response.text
             except:
                 pass
-    print('nothing')
     return ''
 
 
@@ -123,7 +122,6 @@ def get_page_count():
 def request_successful():
     try:
         check_limit_exceeded(URL_JOOBLE)
-        print('successfull')
         return True
     except:
         return False

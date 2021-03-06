@@ -67,11 +67,8 @@ def jooble_insert():
             if it_vacancies_html == '':
                 break
             vacancies_urls = jooble.get_vacancies_urls(it_vacancies_html)
-            print('vacancies_urls', vacancies_urls)
             vacancies_info = jooble.get_vacancies_info(vacancies_urls)
-            print(vacancies_info)
             for vacancy_info in vacancies_info:
-                print('iter vacancy')
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
                     print(vacancy_info['title'], vacancy_info['url'])
