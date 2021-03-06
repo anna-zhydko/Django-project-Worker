@@ -1,6 +1,6 @@
 body{
    font-family: Baskerville Old Face, Times New Roman, serif;
-   background: #F8F8FF;
+   background: #F5EFFB;
 }
 
 ul{
@@ -10,7 +10,7 @@ ul{
 
 #header,
 footer{
-  background: #F5EFFB;
+  background: #ECE0F8;
 }
 
 #search{
@@ -85,7 +85,7 @@ h6.employment{
 }
 
 #form{
-    border: 1px solid #D5DBDB;
+    /*border: 1px solid #D5DBDB;*/
     margin: 0 0 25px 0;
     padding: 10px;
     width: 100%;
@@ -94,7 +94,7 @@ h6.employment{
 #sidebar{
     margin: 0px;
     padding: 0px;
-    width: 90%;
+    width: 100%;
 }
 
 #sidebar_button{
@@ -121,6 +121,10 @@ footer{
 
 .col-12{
     padding: 20px;
+}
+
+.col-md-4{
+    padding: 0;
 }
 
 option[value="Вінниця"],
@@ -160,4 +164,13 @@ option[value="Чернігів"]
 .row{
     margin-right: -15px;
     margin-left: -15px;
+}
+
+.text-center{
+    margin: auto;
+}
+
+.header-container{
+    max-width: 1140px;
+    margin: auto;
 }
