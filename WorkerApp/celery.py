@@ -14,7 +14,7 @@ app.conf.timezone = 'Europe/Kiev'
 app.conf.beat_schedule = {
     'clear_db': {
         'task': 'main.tasks.all_tasks',
-        'schedule': crontab(hour=20, minute=35)
+        'schedule': crontab(hour=16, minute=55)
     }
 }
 
