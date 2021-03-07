@@ -10,7 +10,6 @@ proxy_list = []
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
     response = get_response(url, params)
-    print(response.status_code)
     try:
         response = get_response(url, params)
         return response.text

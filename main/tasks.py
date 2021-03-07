@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from .utils import check_existence, insert_db
 from celery import group
+import time
 
 
 # @app.task
@@ -16,6 +17,7 @@ from celery import group
 # This task gets the info about a vacancy from work.ua and inserts it to db
 @app.task
 def work_ua_insert():
+    c = time.time()
     print('work ua')
     Job.objects.all().delete()
     if work_ua.request_successful():
@@ -33,13 +35,15 @@ def work_ua_insert():
             for vacancy_info in vacancies_info:
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
-                    print(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city'])
+                    print(vacancy_info['city'])
     print('Work_ua. The end')
+    print(time.time() - c)
 
 
 # This task gets the info about a vacancy via rabota.ua API and inserts it to db
 @app.task
 def rabota_ua_insert():
+    c = time.time()
     if rabota_ua.request_successful():
         print('rabota ua')
         Job.objects.all().delete()
@@ -52,13 +56,15 @@ def rabota_ua_insert():
             for vacancy_info in rabota_ua.get_vacancies_info(vacancies_id):
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
-                    print(vacancy_info['title'], vacancy_info['url'])
+                    print(vacancy_info['city'])
     print('Rabota_ua. The end')
+    print(c - time.time())
 
 
 # This task gets the info about a vacancy from jooble and inserts it to db
 @app.task
 def jooble_insert():
+    c = time.time()
     print('jooble')
     Job.objects.all().delete()
     if jooble.request_successful():
@@ -71,13 +77,16 @@ def jooble_insert():
             for vacancy_info in vacancies_info:
                 if check_existence(vacancy_info['title'], vacancy_info['company_name'], vacancy_info['city']) is False:
                     insert_db(vacancy_info)
-                    print(vacancy_info['title'], vacancy_info['url'])
+                    print(vacancy_info['city'])
     print('Jooble_ua. The end')
+    print(time.time() - c)
 
 
 @app.task
 def all_tasks():
+    c = time.time()
     print('task group')
     Job.objects.all().delete()
     task_group = group([work_ua_insert.s(), rabota_ua_insert.s(), jooble_insert.s()])
     task_group()
+    print(time.time() - c)

@@ -1,6 +1,6 @@
 body{
    font-family: Baskerville Old Face, Times New Roman, serif;
-   background: #F5EFFB;
+   background: #fcfcff;
 }
 
 ul{
@@ -10,7 +10,7 @@ ul{
 
 #header,
 footer{
-  background: #ECE0F8;
+  background: #e6e6fa;
 }
 
 #search{
@@ -106,6 +106,7 @@ div .card{
   margin: 30px auto;
   width: 89%;
   padding: 7px;
+  border-radius: 7px;
 }
 
 p.description{
