@@ -9,7 +9,6 @@ from ..models import Job
 proxy_list = []
 # if limit is exceeded then makes request via proxy
 def check_limit_exceeded(url, params=None):
-    response = get_response(url, params)
     try:
         response = get_response(url, params)
         return response.text
@@ -24,6 +23,7 @@ def check_limit_exceeded(url, params=None):
                 return response.text
             except:
                 pass
+    print('nothing')
     return ''
 
 
@@ -55,6 +55,7 @@ def get_vacancies_info(vacancies_urls):
     for vacancy_url in vacancies_urls:
         vacancy_html = check_limit_exceeded(vacancy_url)
         if vacancy_html == '':
+            print('break')
             break
         soup = BeautifulSoup(vacancy_html, 'html.parser')
         title = soup.find('h1', id='h1-name')
@@ -72,6 +73,7 @@ def get_vacancies_info(vacancies_urls):
             skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
         else:
             databases_list, prog_lang_list, skills_list = '', '', ''
+        print('city', vacacy_address[0])
         vacancy_info = {'title': title.text if title else '',
                         'url': vacancy_url,
                         # translate a city to ukrainian
