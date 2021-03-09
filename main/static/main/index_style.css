@@ -33,8 +33,6 @@ label{
 h1{
     font-size: 46px;
     font-weight: bold;
-    margin: 20px 0 0;
-    padding-bottom: 0;
 }
 
 h4{
@@ -58,7 +56,7 @@ h5.title{
 }
 
 h6{
-    padding: 10px;
+    padding: 0 0 010px;
 }
 
 h6.city{
@@ -80,14 +78,12 @@ h6.employment{
 
 #logo{
     font-style: italic;
-    margin-top: 0;
-    padding: 0 0 20px;
 }
 
 #form{
     /*border: 1px solid #D5DBDB;*/
     margin: 0 0 25px 0;
-    padding: 10px;
+    padding: 0 10px;
     width: 100%;
 }
 
@@ -104,7 +100,7 @@ h6.employment{
 div .card{
   height: 258px;
   margin: 30px auto;
-  width: 89%;
+  width: 90%;
   padding: 7px;
   border-radius: 7px;
 }
@@ -174,4 +170,8 @@ option[value="Чернігів"]
 .header-container{
     max-width: 1140px;
     margin: auto;
+}
+
+#wrapper{
+
 }

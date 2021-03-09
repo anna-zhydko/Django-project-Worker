@@ -73,7 +73,7 @@ def get_vacancies_info(vacancies_urls):
             skills_list = re.findall(r'|html|css|\.net|1c|flash|excel|2d|3d|git|tcp/ip|qa|sql', description.lower())
         else:
             databases_list, prog_lang_list, skills_list = '', '', ''
-        print('city', vacacy_address[0])
+        print('city', vacancy_address[0])
         vacancy_info = {'title': title.text if title else '',
                         'url': vacancy_url,
                         # translate a city to ukrainian
