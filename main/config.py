@@ -1,6 +1,5 @@
 HOST_WORKUA = 'https://www.work.ua'
 URL_WORKUA = 'https://www.work.ua/ru/jobs-it-programmer/?days=123'
-HOST = 'https://rabota.ua/'
 VACANCIES_API = 'https://api.rabota.ua/vacancy/search'
 VACANCY_API = 'https://api.rabota.ua/vacancy'
 URL_RABOTAUA = 'https://rabota.ua/zapros/programmer/%d1%83%d0%ba%d1%80%d0%b0%d0%b8%d0%bd%d0%b0'

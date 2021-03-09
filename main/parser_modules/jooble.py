@@ -11,6 +11,7 @@ proxy_list = []
 def check_limit_exceeded(url, params=None):
     try:
         response = get_response(url, params)
+        print(response.url)
         return response.text
     except:
         global proxy_list
@@ -70,6 +71,7 @@ def get_vacancies_info(vacancy_urls):
     for vacancy_url in vacancy_urls:
         vacancy_html = check_limit_exceeded(vacancy_url)
         if vacancy_html == '':
+            print('break')
             break
         salary = check_info(vacancy_html, 'span', 'bb301 h3')
         # translate employment_type and remote_work to russian
@@ -111,9 +113,9 @@ def get_page_count():
     #     # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
     #     # page 1, not null
     #     results_count = int(''.join(re.findall(r"\d*", soup.find('div', company='p').text))) + 1
-    #     if results_count < 20:
+    #     if results_count < 20: # &&&&&&&&&&& 10.
     #         raise ValueError
-    #     return results_count // 20  # divide by 20, because one page on jooble.ua containes 20 vacacancies
+    #     return results_count // 10  # divide by 20, because one page on jooble.ua containes 20 vacacancies
     # except:
         return 2
 
