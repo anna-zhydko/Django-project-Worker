@@ -70,5 +70,5 @@ def jooble_insert():
 @app.task
 def all_tasks():
     Job.objects.all().delete()
-    task_group = group([jooble_insert.s()])
+    task_group = group([work_ua_insert.s()])
     task_group()
