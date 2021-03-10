@@ -111,7 +111,9 @@
         <div class="card">
           <a href="{{ vacancy.url }}"><h5 class="title">{{ vacancy.title }}</h5></a>
           <h6 class="city">{{ vacancy.city }}</h6>
+          {% if vacancy.salary %}
           <h6 class="salary">{{ vacancy.salary }} грн</h6>
+          {% endif %}
           <p class="description">{{ vacancy.description }}</p>
         </div>
         {% endfor%}
