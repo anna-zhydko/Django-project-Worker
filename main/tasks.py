@@ -4,7 +4,7 @@ from .models import Job
 from .config import *
 import requests
 from bs4 import BeautifulSoup
-from .utils import check_existence, insert_db
+from .utils import check_existence, insert_db, translator
 from celery import group
 
 
@@ -13,7 +13,6 @@ from celery import group
 def work_ua_insert():
     if work_ua.request_successful():
         for page in range(1, work_ua.get_page_count()):
-            print(page)
             it_vacancies_html = work_ua.check_limit_exceeded(URL_WORKUA, {'page': page})
             if it_vacancies_html == '':
                 print('break')
@@ -36,7 +35,7 @@ def work_ua_insert():
 def rabota_ua_insert():
     if rabota_ua.request_successful():
         # Minus 2 for insurance
-        for page in range(1, 2):
+        for page in range(1, 5):
             print(page)
             vacancies = rabota_ua.check_limit_exceeded(VACANCIES_API, {'keyWords': 'programmer', 'page': page})
             print('vacancies 1', len(vacancies))
@@ -54,8 +53,7 @@ def rabota_ua_insert():
 @app.task
 def jooble_insert():
     if jooble.request_successful():
-        for page in range(97, 100):
-            print(page)
+        for page in range(1, jooble.get_page_count()):
             it_vacancies_html = jooble.check_limit_exceeded(URL_JOOBLE, {'p': page})
             if it_vacancies_html == '':
                 break
@@ -70,5 +68,5 @@ def jooble_insert():
 @app.task
 def all_tasks():
     Job.objects.all().delete()
-    task_group = group([work_ua_insert.s()])
+    task_group = group([work_ua_insert.s(), rabota_ua_insert.s(), jooble_insert.s()])
     task_group()

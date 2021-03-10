@@ -11,7 +11,6 @@ proxy_list = []
 def check_limit_exceeded(url, params=None):
     try:
         response = get_response(url, params)
-        print(response.url)
         return response.text
     except:
         global proxy_list
@@ -113,9 +112,9 @@ def get_page_count():
     #     # get count of all vacancies in IT-catigory in jooble at the current moment. Plus one because we start with
     #     # page 1, not null
     #     results_count = int(''.join(re.findall(r"\d*", soup.find('div', company='p').text))) + 1
-    #     if results_count < 20: # &&&&&&&&&&& 10.
+    #     if results_count < 20: # &&&&&&&&&&& 15.
     #         raise ValueError
-    #     return results_count // 10  # divide by 20, because one page on jooble.ua containes 20 vacacancies
+    #     return results_count // 15  # divide by 20, because one page on jooble.ua containes 20 vacacancies
     # except:
         return 2
 

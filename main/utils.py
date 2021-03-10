@@ -1,4 +1,4 @@
-from googletrans import Translator
+from google_trans_new import google_translator
 from .models import Job
 from .config import *
 import requests
@@ -30,11 +30,11 @@ def insert_db(vacancy_info):
 
 # The function returns translated text from source lang to destination lang
 def translator(text, source, destination):
-    translator_object = Translator()
+    translator_object = google_translator()
     try:
-        return translator_object.translate(text, src=source, dest=destination).text
+        return translator_object.translate(text, lang_src=source, lang_tgt=destination)
     except:
-        return ''
+        return text
 
 # The function makes request from website and gets response
 def get_response(url, params=None, proxies=None, timeout=None):
