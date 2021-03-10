@@ -33,7 +33,6 @@ def get_vacancies_info(vacancies_id):
         vacancy_json = check_limit_exceeded(VACANCY_API, {'id': vacancy_id})
         if vacancy_json == '':
             break
-        # print(vacancy_json)
         employment = [cluster['groups'][0]['name'] if cluster['id'] == 52 else '' for cluster in vacancy_json['clusters']]
         description = BeautifulSoup(vacancy_json['description'], 'html.parser').text
         databases_list = re.findall(r'mysql|postgresql|nosql|mariadb|sqlite|oracle|mongodb|ms sql', description.lower())

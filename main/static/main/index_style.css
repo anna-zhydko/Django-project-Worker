@@ -31,8 +31,9 @@ label{
 }
 
 h1{
-    font-size: 46px;
+    font-size: 45px;
     font-weight: bold;
+    margin-bottom: 0;
 }
 
 h4{
@@ -78,6 +79,7 @@ h6.employment{
 
 #logo{
     font-style: italic;
+    font-size: 18px;
 }
 
 #form{
@@ -106,7 +108,6 @@ div .card{
 }
 
 p.description{
-   font-style: italic;
    overflow: hidden;
    text-overflow: ellipsis;
    padding: 0 7px;
