@@ -34,22 +34,23 @@ def search(request):
 def index(request):
     form = RequirementsForm(request.GET)
     form_search = SearchForm(request.GET)
-    if form.is_valid():
+    if not list(request.GET.values()):
+        vacancies = Job.objects.all()
+    elif form.is_valid():
         vacancies = handler_form(form)
-        # if we don`t have corresponding vacancies we show all vacancies
-        if not vacancies:
-            vacancies = Job.objects.all() #??????????????????????????
-        page, is_paginated, prev_url, next_url, current_url = pagination(request, vacancies)
-        context = {
-            'form': form,
-            'form_search': form_search,
-            'results': len(vacancies),
-            'page_object': page,
-            'is_paginated': is_paginated,
-            'prev_url': prev_url,
-            'next_url': next_url,
-            'current_url': current_url,
-        }
+    else:
+        vacancies = []
+    page, is_paginated, prev_url, next_url, current_url = pagination(request, vacancies)
+    context = {
+        'form': form,
+        'form_search': form_search,
+        'results': len(vacancies),
+        'page_object': page,
+        'is_paginated': is_paginated,
+        'prev_url': prev_url,
+        'next_url': next_url,
+        'current_url': current_url,
+    }
     return render(request, 'main/index.html', context)
 
 
@@ -65,7 +66,7 @@ def handler_form(form):
     vacancies = []
     for vacancy in Job.objects.all():
         if city == 'all cities' or (city in vacancy.city.lower()):
-            if without_salary or vacancy.salary >= salary:
+            if (without_salary and salary == '') or (vacancy.salary >= salary != '') or (not without_salary and vacancy.salary):
                 if re.search(employment, vacancy.employment.lower()):
                     if re.search(prog_lang, vacancy.prog_lang.lower()):
                         if re.search(data_bases, vacancy.data_bases.lower()):
@@ -77,6 +78,7 @@ def handler_form(form):
                                      'city': vacancy.city,
                                      'employment': vacancy.employment,
                                      'description': vacancy.description})
+
     return vacancies
 
 

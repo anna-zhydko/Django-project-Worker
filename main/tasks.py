@@ -35,7 +35,7 @@ def work_ua_insert():
 def rabota_ua_insert():
     if rabota_ua.request_successful():
         # Minus 2 for insurance
-        for page in range(1, 5):
+        for page in range(1, 2):
             print(page)
             vacancies = rabota_ua.check_limit_exceeded(VACANCIES_API, {'keyWords': 'programmer', 'page': page})
             print('vacancies 1', len(vacancies))
