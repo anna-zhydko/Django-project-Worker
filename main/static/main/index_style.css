@@ -37,7 +37,6 @@ h1{
 }
 
 h4{
-    margin-top: 10px;
     font-weight: bold;
 }
 
@@ -57,7 +56,7 @@ h5.title{
 }
 
 h6{
-    padding: 0 0 010px;
+    padding: 0 0 2% 1%;
 }
 
 h6.city{
@@ -83,7 +82,10 @@ h6.employment{
 }
 
 #form{
-
+    box-shadow: 0px 0px 10px -4px rgba(205,184,209,0.63);
+    padding: 3%;
+    background: #ffffff;
+    border-radius: 3px;
 }
 
 #sidebar{
@@ -98,10 +100,12 @@ h6.employment{
 
 div .card{
   height: 258px;
-  margin: 30px auto;
-  width: 90%;
-  padding: 7px;
-  border-radius: 7px;
+  width: 98%;
+  padding: 1%;
+  margin-bottom: 2%;
+  border-radius: 3px;
+  border: 0;
+  box-shadow: 0px 0px 10px -4px rgba(205,184,209,0.63);
 }
 
 p.description{
@@ -167,12 +171,12 @@ option[value="Чернігів"]
 .header-container{
     max-width: 1140px;
     margin: auto;
+    margin-bottom: 2%;
 }
 
-#wrapper{
+.wrapper{
     display: flex;
     flex-direction: column;
     width: 90%;
-    margin: 8% auto;
-    padding: 1%;
+    margin: auto;
 }
