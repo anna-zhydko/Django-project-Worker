@@ -18,8 +18,8 @@
 
   <link rel="stylesheet" type="text/css" href="/static/main/index_style.css">
 
-  <link rel="shortcut icon" href="../../static/main/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="../../static/main/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../../static/main/logo.ico" type="image/x-icon">
+  <link rel="icon" href="../../static/main/logo.ico" type="image/x-icon">
 </head>
 <body>
 <header id="header">
@@ -27,12 +27,12 @@
     <nav class="navbar navbar-expand-lg navbar-light">
 
       <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-              <div class="text-center">
-                <h1>WORKER</h1>
-                <h5 id="logo">Find your way</h5>
-              </div>
-            </a>
+        <a class="navbar-brand" href="/">
+          <div class="text-center">
+            <h1>WORKER</h1>
+            <h5 id="logo">Find your way</h5>
+          </div>
+        </a>
 
         <form class="form-inline my-2 my-lg-0" action="/search" method="get">
           {{form_search}}
@@ -46,7 +46,7 @@
             </svg>
           </button>
         </form>
-        </div>
+      </div>
     </nav>
   </div>
 </header>
@@ -63,30 +63,30 @@
 
         <div class="collapse navbar-collapse" id="navbar-form">
           <div class="wrapper">
-          <h4>Requirements</h4>
-          <form id="form" action="/" method="get">
-            <h5>City</h5>
-            {{form.city}}
-            <hr>
-            <h5>Salary</h5>
-            from <br>
-            {{form.salary}}
-            {{form.without_salary}}
-            <hr>
-            <h5>Employment type</h5>
-            {{form.emp}}
-            <hr>
-            <h5>Programming languages</h5>
-            {{form.lang}}
-            <hr>
-            <h5>Data bases</h5>
-            {{form.db}}
-            <hr>
-            <h5>Skills</h5>
-            {{form.skills}}
-            <hr>
-            <button type="submit" class="btn btn-primary">Send</button>
-          </form>
+            <h4>Requirements</h4>
+            <form id="form" action="/" method="get">
+              <h5>City</h5>
+              {{form.city}}
+              <hr>
+              <h5>Salary</h5>
+              from <br>
+              {{form.salary}}
+              {{form.without_salary}}
+              <hr>
+              <h5>Employment type</h5>
+              {{form.emp}}
+              <hr>
+              <h5>Programming languages</h5>
+              {{form.lang}}
+              <hr>
+              <h5>Data bases</h5>
+              {{form.db}}
+              <hr>
+              <h5>Skills</h5>
+              {{form.skills}}
+              <hr>
+              <button type="submit" class="btn btn-primary">Send</button>
+            </form>
           </div>
         </div>
       </nav>
@@ -99,16 +99,19 @@
         {% for vacancy in page_object.object_list %}
         <div class="card">
           <a href="{{ vacancy.url }}"><h5 class="title">{{ vacancy.title }}</h5></a>
-          <h6 class="city">{{ vacancy.city }}</h6>
-          {% if vacancy.salary %}
-          <h6 class="salary">{{ vacancy.salary }} грн</h6>
-          {% endif %}
+          <p class="citySalary">
+            <img src="../../static/main/logo4.jpg" width="7%">
+            {{ vacancy.city }}<br>
+            {% if vacancy.salary %}
+            {{ vacancy.salary }} грн
+            {% endif %}
+          </p>
           <p class="description">{{ vacancy.description }}</p>
         </div>
         {% endfor%}
       </div>
 
-        {% if is_paginated %}
+      {% if is_paginated %}
       <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
           <li class="page-item">
