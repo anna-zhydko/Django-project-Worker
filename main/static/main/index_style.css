@@ -34,6 +34,7 @@ h1{
     font-size: 45px;
     font-weight: bold;
     margin-bottom: 0;
+    text-shadow: 0px 1px 0px #474747;
 }
 
 h4{
@@ -59,17 +60,6 @@ h6{
     padding: 0 0 2% 1%;
 }
 
-h6.city{
-    font-size: 19px;
-    font-weight: bold;
-    padding: 0;
-}
-
-h6.salary{
-    font-size: 18px;
-    padding: 0;
-}
-
 h6.employment{
     font-style: italic;
     font-size: 18px;
@@ -79,6 +69,7 @@ h6.employment{
 #logo{
     font-style: italic;
     font-size: 18px;
+    text-shadow: 0px 1px 0px #474747;
 }
 
 #form{
@@ -86,6 +77,7 @@ h6.employment{
     padding: 3%;
     background: #ffffff;
     border-radius: 3px;
+    margin-top: 3%;
 }
 
 #sidebar{
@@ -101,7 +93,7 @@ h6.employment{
 div .card{
   height: 258px;
   width: 98%;
-  padding: 1%;
+  padding: 6px;
   margin-bottom: 2%;
   border-radius: 3px;
   border: 0;
@@ -111,6 +103,7 @@ div .card{
 p.description{
    overflow: hidden;
    text-overflow: ellipsis;
+   text-align: justify;
 }
 
 footer{
@@ -179,4 +172,15 @@ option[value="Чернігів"]
     flex-direction: column;
     width: 90%;
     margin: auto;
+}
+
+.citySalary{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+img{
+    float: right;
+    width: 50px;
+    border-radius: 7%;
 }
