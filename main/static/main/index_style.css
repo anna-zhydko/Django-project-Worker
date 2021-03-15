@@ -184,3 +184,11 @@ img{
     width: 50px;
     border-radius: 7%;
 }
+
+form .form-inline my-2 my-lg-0{
+    margin-right: 3%;
+}
+
+.btn btn-primary{
+    width: 100%;
+}
