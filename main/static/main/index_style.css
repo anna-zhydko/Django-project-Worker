@@ -192,3 +192,7 @@ form .form-inline my-2 my-lg-0{
 .btn btn-primary{
     width: 100%;
 }
+
+#SearchFormButton:target{
+    background-image: url(caret-up.svg);
+}

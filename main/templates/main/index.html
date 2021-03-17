@@ -33,19 +33,29 @@
             <h5 id="logo">Find your way</h5>
           </div>
         </a>
-
-        <form class="form-inline my-2 my-lg-0" action="/search" method="get">
-          {{form_search}}
-          <button id="search" class="btn btn-light my-2 my-sm-0" type="submit">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
-                 stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
-                 viewBox="0 0 24 24" focusable="false"><title>Search</title>
-              <circle cx="10.5" cy="10.5" r="7.5">
-              </circle>
-              <path d="M21 21l-5.2-5.2"></path>
-            </svg>
-          </button>
-        </form>
+        <div id="searchForm">
+          <form class="form-inline my-2 my-lg-0" action="/search" method="get">
+            {{form_search}}
+            <button id="search" class="btn btn-light my-2 my-sm-0" type="submit">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                   stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
+                   viewBox="0 0 24 24" focusable="false"><title>Search</title>
+                <circle cx="10.5" cy="10.5" r="7.5">
+                </circle>
+                <path d="M21 21l-5.2-5.2"></path>
+              </svg>
+            </button>
+          </form>
+        </div>
+        <button id="SearchFormButton" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#searchForm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+               stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img"
+               viewBox="0 0 24 24" focusable="false"><title>Search</title>
+            <circle cx="10.5" cy="10.5" r="7.5">
+            </circle>
+            <path d="M21 21l-5.2-5.2"></path>
+          </svg>
+        </button>
       </div>
     </nav>
   </div>
@@ -58,7 +68,13 @@
         <button id="sidebar_button" class="navbar-toggler " type="button" data-toggle="collapse"
                 data-target="#navbar-form" aria-controls="navbar-form" aria-expanded="false"
                 aria-label="Toggle navigation">
-          Additions
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-justify"
+               viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                  d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1
+                  .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1
+                  h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+          </svg>
         </button>
 
         <div class="collapse navbar-collapse" id="navbar-form">
