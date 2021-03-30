@@ -35,16 +35,23 @@ def index(request):
     form = RequirementsForm(request.GET)
     form_search = SearchForm(request.GET)
     if not list(request.GET.values()):
-        vacancies = Job.objects.all()
+        found_vacancies = Job.objects.all()
     elif form.is_valid():
-        vacancies = handler_form(form)
+        if form_search.is_valid():
+            search_text = form_search.cleaned_data['search'].lower()
+        else:
+            search_text = ''
+        print('search_text', search_text)
+        # the list of vacancies witch have similar title with the search text
+        vacancies = [vacancy for vacancy in Job.objects.all() if re.search(search_text, vacancy.title.lower())]
+        found_vacancies = handler_form(form, vacancies)
     else:
-        vacancies = []
-    page, is_paginated, prev_url, next_url, current_url = pagination(request, vacancies)
+        found_vacancies = []
+    page, is_paginated, prev_url, next_url, current_url = pagination(request, found_vacancies)
     context = {
         'form': form,
         'form_search': form_search,
-        'results': len(vacancies),
+        'results': len(found_vacancies),
         'page_object': page,
         'is_paginated': is_paginated,
         'prev_url': prev_url,
@@ -55,7 +62,7 @@ def index(request):
 
 
 # The function reading the data from form and returns list of corresponding vacancies
-def handler_form(form):
+def handler_form(form, vacancies):
     city = form.cleaned_data['city'].lower()
     salary = form.cleaned_data['salary']
     without_salary = form.cleaned_data['without_salary']
@@ -63,15 +70,15 @@ def handler_form(form):
     prog_lang = '|'.join(form.cleaned_data['lang'])
     data_bases = '|'.join(form.cleaned_data['db'])
     skills = '|'.join(form.cleaned_data['skills'])
-    vacancies = []
-    for vacancy in Job.objects.all():
+    found_vacancies = []
+    for vacancy in vacancies:
         if city == 'all cities' or (city in vacancy.city.lower()):
             if (without_salary and salary == '') or (vacancy.salary >= salary != '') or (not without_salary and vacancy.salary):
                 if re.search(employment, vacancy.employment.lower()):
                     if re.search(prog_lang, vacancy.prog_lang.lower()):
                         if re.search(data_bases, vacancy.data_bases.lower()):
                             if re.search(skills, vacancy.skills.lower()):
-                                vacancies.append(
+                                found_vacancies.append(
                                     {'title': vacancy.title,
                                      'url': vacancy.url,
                                      'salary': vacancy.salary,
@@ -79,7 +86,7 @@ def handler_form(form):
                                      'employment': vacancy.employment,
                                      'description': vacancy.description})
 
-    return vacancies
+    return found_vacancies
 
 
 def pagination(request, vacancies):

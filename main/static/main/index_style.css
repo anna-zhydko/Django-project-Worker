@@ -1,3 +1,52 @@
+/* CSS reset*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+html {
+	height: 100%;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* My CSS */
+
 body{
    font-family: Baskerville Old Face, Times New Roman, serif;
    background: #fcfcff;
@@ -89,13 +138,14 @@ h6.employment{
 #sidebar_button{
     border: none;
     box-shadow: 0px 0px 10px -4px rgba(205,184,209,0.63);
-    margin: 0px 0 3px 28px;
+    margin: 3px 0;
     color: black;
+    width: max-content;
 }
 
 div .card{
-  height: 258px;
-  width: 98%;
+  height: 270px;
+  width: 100%;
   padding: 6px;
   margin-bottom: 2%;
   border-radius: 3px;
@@ -155,11 +205,6 @@ option[value="Чернігів"]
   width: 100%;
 }
 
-.row{
-    margin-right: -15px;
-    margin-left: -15px;
-}
-
 .text-center{
     margin: auto;
 }
@@ -192,10 +237,10 @@ form .form-inline my-2 my-lg-0{
     margin-right: 3%;
 }
 
-.btn btn-primary{
+.btn.btn-primary{
     width: 100%;
 }
 
-#SearchFormButton:target{
-    background-image: url(caret-up.svg);
+#second_main_colon{
+    padding: 0;
 }
